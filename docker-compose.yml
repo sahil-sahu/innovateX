@@ -1,10 +1,11 @@
-version: '3'
-
+version: '3.7'
 services:
-  web:
-    build: .
+  app:
+    image: smarthome
     ports:
-      - "8000:8000"
-    # volumes:
-    #   - .:/smartHome
-    # command: python manage.py runserver 0.0.0.0:8000
+      - 5000:8000
+  mqtt_broker:
+    image: eclipse-mosquitto
+    container_name: mqtt_broker
+    ports:
+      - "1883:1883"
