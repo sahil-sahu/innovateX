@@ -16,8 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from sensors.views import ControllerView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('sensors/', include('sensors.urls')),
+    path('control/', ControllerView.as_view(), name='control')
 ]

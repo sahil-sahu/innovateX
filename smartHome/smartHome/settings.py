@@ -124,6 +124,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# MQTT_BROKER_HOST = 'localhost'
+MQTT_BROKER_HOST = 'mqtt_broker'
+MQTT_BROKER_PORT = 1883  # Default MQTT port
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

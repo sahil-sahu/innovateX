@@ -6,6 +6,9 @@ from rest_framework import status
 from .models import Sensor, Moniter
 from .serializers import Sensor_Serializer, Moniter_Serializer
 from datetime import datetime
+import paho.mqtt.client as mqtt
+from smartHome import settings
+import json
 
 
 class MoniterView(APIView):
@@ -52,3 +55,23 @@ class SensorView(APIView):
         sensors = Sensor.objects.all()
         serializer = Sensor_Serializer(sensors, many=True)
         return Response(serializer.data)
+
+
+class ControllerView(APIView):
+    def post(self, request):
+        topic = "ledcontrol"
+        try:
+            client = mqtt.Client("DjangoControl")
+            client.connect(settings.MQTT_BROKER_HOST, 1883)
+            publish_message(topic, json.dumps(request.data))
+            return Response({"issue": "created"}, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            return Response({"issue": "failed"}, status=status.HTTP_201_CREATED)
+
+    def get(self, request):
+        client = mqtt.Client("DjangoStatus")
+
+        client.connect(settings.MQTT_BROKER_HOST, 1883)
+        client.publish("ledcontrol", "STATUS")
+        return Response({"Realtime_Status": "syncing"}, status=status.HTTP_201_CREATED)

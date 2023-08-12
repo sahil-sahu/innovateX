@@ -1,0 +1,6 @@
+FROM python:3.8-slim
+
+COPY webserver.py /app/
+RUN pip install websockets
+
+CMD ["python", "/app/webserver.py"]

@@ -4,8 +4,26 @@ services:
     image: smarthome
     ports:
       - 5000:8000
+    depends_on:
+      - websocket  
+    networks:
+      - zephweb  
   mqtt_broker:
     image: eclipse-mosquitto
     container_name: mqtt_broker
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
     ports:
-      - "1883:1883"
+      - 1883:1883
+    networks:
+      - zephweb
+
+  websocket:
+    image: websocket
+    ports:
+      - 8765:8765  
+    networks:
+      - zephweb  
+      
+networks:
+  zephweb:     

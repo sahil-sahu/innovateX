@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './screens/Home';
@@ -26,6 +26,11 @@ const MySvg = (props) => (
 export default function App() {
   const [url ,setUrl] = useState("");
   const [start ,setStart] = useState(false);
+
+  // useEffect(function(){
+  //   // initialize();
+  // },[]);
+
   if(start){
     return(
       <NavigationContainer>
@@ -176,7 +181,9 @@ export default function App() {
             />
       <Button
                 title="Lets Go"
-                onPress={() => {setStart(true);}}
+                onPress={() => {
+                  setStart(true);
+                }}
             />
 
       <StatusBar style="auto" />

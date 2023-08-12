@@ -5,7 +5,14 @@ import React, {useState} from 'react';
 const ControlBox = (props) => {
 
     const [isEnabled, setIsEnabled] = useState(false);
-    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+    const toggleSwitch = () => {
+        setIsEnabled(previousState => !previousState)
+        if (!isEnabled) {
+            // publishMessage();
+        } else {
+            //
+        }
+    };
 
     return(
         <View style={{flexDirection:'row', alignItems:'center', justifyContent: 'space-between'}}>
@@ -21,8 +28,8 @@ const ControlBox = (props) => {
                 </MyText>
             </View>
             <Switch
-                trackColor={{false: '#FFC8C8', true: '#C4FFD1'}}
-                thumbColor={isEnabled ? '#13DA3F' : '#DB2929'}
+                trackColor={{false: '#F4F2FF', true: '#B8AAF2'}}
+                thumbColor={isEnabled ? '#887AC2' : '#180C4C'}
                 ios_backgroundColor="#13DA3F"
                 onValueChange={toggleSwitch}
                 value={isEnabled}
