@@ -1,7 +1,10 @@
-import { StyleSheet, Text, View, Image, Pressable, Switch, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, Pressable, Switch, ScrollView, Button } from 'react-native';
 import Header from '../components/header';
 import { MyText, XHeading, MHeading } from '../components/myText';
 import ControlBox from '../components/controlBox';
+import { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 const Item = [
     {
@@ -33,6 +36,52 @@ const Item = [
 
 function Control(){
 
+    const {backend, websocket} = useSelector(state => state.config);
+    // const socket = useRef(new WebSocket(websocket));
+    const [sensors, setSensors] = useState([]);
+
+
+    // socket.current.onopen = () => {
+    // console.log('Connection opened');
+    // };
+
+    // socket.current.onmessage = (event) => {
+    // // console.log('Received message: ', event.data);
+    // };
+
+    // socket.current.onclose = () => {
+    // console.log('Connection closed');
+    // };
+
+    // socket.current.onerror = (error) => {
+    // console.log('Error: ', error);
+    // };
+
+    async function fetchRes(){
+        try {
+            let res = await axios.get(backend + "/sensors/show")
+            // console.log(res.data)
+            setSensors(res.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async function fetchStatus(){
+        try {
+            let res = await axios.get(backend + "/control/")
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(()=>{
+        // socket.current = new WebSocket(websocket)
+
+        fetchRes();
+
+    },[])
+
     return(
         <ScrollView style={{padding:20,}}>
             <Header></Header>
@@ -47,8 +96,9 @@ function Control(){
             </View>
             <View style={{height:40,padding:5,}}></View>
             <View style={{gap:20,}}>
-                {Item.map((e,i) => {
-                    return <ControlBox key={i} title={e.title} duration={e.duration} usage={e.usage}></ControlBox>
+                {Object.keys(sensors).map((ele,i) => {
+                    let e = sensors[ele]
+                    return <ControlBox key={e.id} id={e.id} title={e.location} duration={"30mins"} usage={`100`}></ControlBox>
                 })}
             </View>
         </ScrollView>

@@ -5,8 +5,16 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './screens/Home';
 import FootScreen from './screens/Footprint';
 import Control from './screens/Control';
+import Stats from './screens/Stats';
 import { NavigationContainer } from '@react-navigation/native';
 import Svg, { SvgUri, G, Path, Defs, ClipPath } from 'react-native-svg';
+import { isValidIPv4 } from './helpers/helpers';
+import { ToastAndroid } from 'react-native';
+
+import { Provider } from 'react-redux';
+import store from './redux/store';
+import { setBackend } from './redux/config';
+
 const carbon = require('./assets/nav/footprints.svg');
 const stats = require('./assets/nav/candlestick-chart.svg');
 const home = require('./assets/nav/home.svg');
@@ -27,12 +35,13 @@ export default function App() {
   const [url ,setUrl] = useState("");
   const [start ,setStart] = useState(false);
 
-  // useEffect(function(){
-  //   // initialize();
-  // },[]);
+  const showToast = (msg) => {
+    ToastAndroid.show(msg, ToastAndroid.SHORT);
+  };
 
   if(start){
     return(
+      <Provider store={store}>
       <NavigationContainer>
         <Tab.Navigator initialRouteName="Home" tabBarOptions={{
         style: { backgroundColor: '#E6E1FF', padding: 10, height: 75, borderRadius: 10, },
@@ -58,7 +67,7 @@ export default function App() {
       }
             }
           />
-          <Tab.Screen name="Stats" component={FootScreen}
+          <Tab.Screen name="Stats" component={Stats}
             options={
               {
                 tabBarIcon: ({ focused }) => <Svg
@@ -169,6 +178,7 @@ export default function App() {
           />
         </Tab.Navigator>
       </NavigationContainer>
+      </Provider>
     );
   }
   return (
@@ -181,8 +191,14 @@ export default function App() {
             />
       <Button
                 title="Lets Go"
-                onPress={() => {
-                  setStart(true);
+                onPress={async () => {
+                  const check = await isValidIPv4(url)
+                  if(check){
+                    store.dispatch(setBackend(url));
+                    setStart(true)
+                  } else {
+                    showToast("Retry")
+                  }
                 }}
             />
 

@@ -9,7 +9,15 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, message):
-  print("Received message: " + message.topic + " " + message.payload.decode())
+  msg = message.payload.decode()
+  print("Received message: " + message.topic + " " + msg)
+  # if msg == "STATUS":
+  #   message = {
+  #       "id": "5531b435-3ac8-47c7-8075-53c9383003ea",
+  #       "state": "ON",
+  #       "type": "STATUS"
+  #   }
+  #   client.publish("ledcontrol", json.dumps(message))
 
 
 client = mqtt.Client("innovateY")
@@ -18,10 +26,14 @@ client.on_message = on_message
 
 client.connect("localhost", 1883)
 message = {
-    "id": "5531b435-3ac8-47c7-8075-53c9383003ea",
+    "sensors": [
+        {
+            "5531b435-3ac8-47c7-8075-53c9383003ea": True
+        },
+    ],
     "state": "ON",
-    "type": "STATUS"
+    "type": "Yo"
 }
 client.publish("ledcontrol", json.dumps(message))
 
-# client.loop_forever()
+client.loop_forever()
