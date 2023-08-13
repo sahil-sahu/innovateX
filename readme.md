@@ -17,7 +17,7 @@ commands:
  
 	docker build -t websocket ./websocket
  
-and run docker-compose up
+	docker-compose up
 
 Make sure both system are on same wifi network.
 ### Step2
