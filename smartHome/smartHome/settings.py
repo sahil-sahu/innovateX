@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework_api_key',
     'rest_framework',
     'sensors',
+    'user',
 ]
 
 API_KEY_AUTH_CLASSES = (
@@ -61,7 +62,7 @@ ROOT_URLCONF = 'smartHome.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'user/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

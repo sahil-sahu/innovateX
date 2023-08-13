@@ -21,5 +21,6 @@ from sensors.views import ControllerView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('sensors/', include('sensors.urls')),
+    path('', include('user.urls')),
     path('control/', ControllerView.as_view(), name='control')
 ]

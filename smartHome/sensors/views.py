@@ -1,6 +1,9 @@
 # views.py
 
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
+from django.db.models import Sum
+from django.db.models.functions import TruncDate
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Sensor, Moniter
@@ -9,6 +12,17 @@ from datetime import datetime
 import paho.mqtt.client as mqtt
 from smartHome import settings
 import json
+
+
+@api_view(['GET'])
+def get_usage_data(request):
+    usage_data = Moniter.objects.order_by('off_duration').annotate(date=TruncDate('off_duration')).values(
+        'date').annotate(total_usage=Sum('usage'))
+    try:
+        usage_data = usage_data[-4:]
+    except:
+        pass
+    return Response(usage_data)
 
 
 class MoniterView(APIView):
@@ -24,9 +38,18 @@ class MoniterView(APIView):
         return Response({"Moniter": False}, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request):
-        sensors = Moniter.objects.all()
-        serializer = Moniter_Serializer(sensors, many=True)
-        return Response(serializer.data)
+        moniter = Moniter.objects.all().order_by('-off_duration')
+        serializer = Moniter_Serializer(moniter, many=True)
+        sensors = Sensor.objects.all()
+        SensorSerial = Sensor_Serializer(sensors, many=True)
+        transformed_data = {}
+        for entry in SensorSerial.data:
+            transformed_data[entry['id']] = entry
+            transformed_data[entry['id']]["usage"] = []
+
+        for data in serializer.data:
+            transformed_data[str(data["sensor_id"])]["usage"].append(data)
+        return Response(transformed_data, status=status.HTTP_201_CREATED)
 
     def put(self, request):
         id = request.data.get("sessionID")
@@ -54,16 +77,27 @@ class SensorView(APIView):
     def get(self, request):
         sensors = Sensor.objects.all()
         serializer = Sensor_Serializer(sensors, many=True)
-        return Response(serializer.data)
+        transformed_data = {}
+
+        client = mqtt.Client("DjangoStatus")
+
+        client.connect(settings.MQTT_BROKER_HOST, 1883)
+        client.publish("ledcontrol", "STATUS")
+
+        for entry in serializer.data:
+            transformed_data[entry['id']] = entry
+
+        return Response(transformed_data, status=status.HTTP_201_CREATED)
 
 
 class ControllerView(APIView):
     def post(self, request):
         topic = "ledcontrol"
+        payload = json.dumps(request.data)
         try:
             client = mqtt.Client("DjangoControl")
             client.connect(settings.MQTT_BROKER_HOST, 1883)
-            publish_message(topic, json.dumps(request.data))
+            client.publish(topic, payload)
             return Response({"issue": "created"}, status=status.HTTP_201_CREATED)
 
         except Exception as e:

@@ -7,7 +7,8 @@ def run_script1(script_name):
 
 
 def run_script2():
-    subprocess.run(["gunicorn", "smartHome.wsgi:application", "--bind", "0.0.0.0:8000"])
+    subprocess.run(["python", "manage.py", "runserver", "0.0.0.0:8000"])
+    # subprocess.run(["gunicorn", "smartHome.wsgi:application", "--bind", "0.0.0.0:8000"])
 
 
 if __name__ == "__main__":

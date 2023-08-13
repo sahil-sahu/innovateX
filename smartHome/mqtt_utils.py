@@ -27,12 +27,22 @@ class Realtime():
         self.client.subscribe("ledcontrol")
 
     async def send_message(self, message):
+        # async with websockets.connect("ws://localhost:8765") as websocket:
         async with websockets.connect("ws://websocket:8765") as websocket:
-            await websocket.send(message)
+            print(message)
+            await websocket.send(str(message))
 
     def on_message(self, client, userdata, msg):
         message = msg.payload.decode("utf-8")
-        asyncio.run(self.send_message(message))
+        try:
+            # mybool = json.loads(message).get("type") == "STATUS"
+            # print(mybool)
+            asyncio.run(self.send_message(message))
+            # if mybool:
+                # asyncio.run(self.send_message(message))
+
+        finally:
+            print("from :", message)
 
 
 inst = Realtime(mqtt.Client("MrDjang"))
