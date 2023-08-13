@@ -11,7 +11,10 @@ Imagine having an app that lets you monitor and control your energy usage for ea
 
 ### Step1
 Prerequisite install docker on laptop or pc and   expo client in mobile.
-and run docker docker-compose up
+commands: 
+	docker build -t smarthome .
+	docker build -t websocket ./websocket
+and run docker-compose up
 
 Make sure both system are on same wifi network.
 ### Step2
