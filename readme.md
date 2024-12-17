@@ -5,6 +5,13 @@
 
 ## Working
 Imagine having an app that lets you monitor and control your energy usage for each device in your home. That's what this app does! It uses an ESP 32 and a current sensor to measure how much power your devices consume and send the data to your smartphone. You can turn your devices on or off remotely via the app, and see how your usage affects your carbon footprint. You can also set goals and get tips to optimize your energy efficiency and save money. But that's not all. This app also alerts you when your dustbin is full, so you never forget to take out the trash. And it detects any gas leakage in your home and notifies you immediately, so you can prevent a fire or an explosion. This app is more than just a smart home assistant. It's a safety and sustainability tool that helps you live a better life.
+![WhatsApp Image 2024-12-17 at 20 01 21_67cf7afa](https://github.com/user-attachments/assets/0845cdf0-909c-4c03-8785-8703af9eb71a)
+## Prototype
+
+
+https://github.com/user-attachments/assets/d85ef68a-b542-44c2-8c9f-e71bf92dd077
+
+
 ## Instruction to run
 
 
